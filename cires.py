@@ -199,15 +199,41 @@ class Logout(BaseHandler):
 
 
   def get(self):
-    ref = self.request.referrer
-    l = ref.split('/')
-    prev_page = l[-1]
     self.logout()
-    self.redirect('/' + prev_page)
+    self.redirect('/')
 
 
+class Project(db.Model):
+    name = db.StringProperty(required = True)
+    author = db.StringProperty(required = True)
+    notes = db.TextProperty()
+
+    @classmethod
+    def by_id(cls, pid):
+        return Project.get_by_id(pid, parent = users_key())
+
+    @classmethod
+    def by_name(cls, name):
+        p = Project.all().filter('name =', name).get()
+        return p
+
+
+class ShowProjects(BaseHandler):
+  def render_front(self):
+    self.render("index.html")
+
+
+  def get(self):
+    self.logout()
+    self.redirect('/')
     
+class CreateProject(BaseHandler):
+  def render_front(self):
+    self.render("index.html")
 
+
+  def get(self):
+    self.response.write(self.user)
 
 
 #######################################################################################
@@ -217,10 +243,10 @@ app = webapp2.WSGIApplication([ ('/', WikiPage),
                                 ('/login', Login),
                                 ('/logout', Logout),
                                 ('/projects', ShowProjects),
-                                ('/projects/create', CreateProject),
-                                ('/projects/import', ImportProject),
-                                ('/projects/records', ShowProjectRecords),
-                                ('/projects/records/edit', ShowProjectRecords),
+                                ('/projects/create', CreateProject)
+                                #('/projects/import', ImportProject),
+                                #('/projects/records', ShowProjectRecords),
+                                #('/projects/records/edit', ShowProjectRecords),
                                 ],
                               debug=True)
 

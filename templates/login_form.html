@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+		<style>
+			.input_form {
+				text-align: right;
+			}
+			.error {
+				color: red;
+			}
+
+			}
+		
+		</style>
+	
+		<h1>Login</h1>
+		<form method = "Post">
+			<table>
+				<tr>
+					<td class="input_form"><label> User Name <input type="text" name ="username" value="{{user_name}}"></label></td>
+					<td class="error">{{err_usr}}</td>
+				</tr>
+				<tr>
+    			<td class="input_form"><label> Password <input type="password" name ="password" ></label></td>
+   				<td class="error">{{err_pwd}}</td>
+    			</tr>
+				<tr><td><input type="Submit"></td></tr>
+   			</table>
+   		</form>
+{% endblock %}   	
