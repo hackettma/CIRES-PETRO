@@ -209,14 +209,21 @@ class Project(db.Model):
     notes = db.TextProperty()
 
     @classmethod
-    def by_id(cls, pid):
-        return Project.get_by_id(pid, parent = users_key())
+    def by_id(cls, pid, uid):
+        return Project.get_by_id(pid, parent = uid)
 
     @classmethod
     def by_name(cls, name):
         p = Project.all().filter('name =', name).get()
         return p
 
+class MainPage (BaseHandler):
+  def render_front(self):
+    self.render("index.html")
+
+
+  def get(self):
+    self.render_front()
 
 class ShowProjects(BaseHandler):
   def render_front(self):
@@ -224,21 +231,31 @@ class ShowProjects(BaseHandler):
 
 
   def get(self):
-    self.logout()
     self.redirect('/')
     
 class CreateProject(BaseHandler):
   def render_front(self):
-    self.render("index.html")
+    self.render("create_project.html")
 
 
   def get(self):
-    self.response.write(self.user)
+    self.render_front()
+
+  def post(self):
+    name = self.request.get("Name")
+    author = self.request.get("Author")
+    notes = self.request.get("Notes")
+    #cookie_val = self.request.cookies.get('user_id')
+    #uid = check_secure_val(cookie_val)
+
+    p = Project(parent=self.user.name, name=name, author=author, notes=notes)
+    p.put()
+    self.redirect('/')
 
 
 #######################################################################################
 ###########URL HANDLER#################################################################            
-app = webapp2.WSGIApplication([ ('/', WikiPage),
+app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/signup', Signup),
                                 ('/login', Login),
                                 ('/logout', Logout),
