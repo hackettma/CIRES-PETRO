@@ -92,7 +92,7 @@ def make_salt(length = 5):
 def make_pw_hash(name, pw, salt = None):
     if not salt:
         salt = make_salt()
-    h = hashlib.sha512(name + pw + salt).hexdigest()
+    h = hashlib.sha256(name + pw + salt).hexdigest()
     return '%s,%s' % (salt, h)
 
 def valid_pw(name, password, h):
@@ -204,7 +204,7 @@ class Logout(BaseHandler):
 
 
 class Project(db.Model):
-    name = db.StringProperty(required = True)
+    proj_name = db.StringProperty(required = True)
     author = db.StringProperty(required = True)
     notes = db.TextProperty()
 
@@ -226,12 +226,14 @@ class MainPage (BaseHandler):
     self.render_front()
 
 class ShowProjects(BaseHandler):
-  def render_front(self):
-    self.render("index.html")
+  def render_front(self, projects=""):
+    self.render("projects.html", projects=projects)
 
 
   def get(self):
-    self.redirect('/')
+    p = Project.all()
+    p.ancestor(self.user)
+    self.render_front(p)
     
 class CreateProject(BaseHandler):
   def render_front(self):
@@ -242,13 +244,12 @@ class CreateProject(BaseHandler):
     self.render_front()
 
   def post(self):
-    name = self.request.get("Name")
+    proj_name = self.request.get("proj_name")
     author = self.request.get("Author")
     notes = self.request.get("Notes")
-    #cookie_val = self.request.cookies.get('user_id')
-    #uid = check_secure_val(cookie_val)
+    
 
-    p = Project(parent=self.user.name, name=name, author=author, notes=notes)
+    p = Project(parent=self.user, proj_name=proj_name, author=author, notes=notes)
     p.put()
     self.redirect('/')
 

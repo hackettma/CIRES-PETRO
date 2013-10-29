@@ -12,7 +12,7 @@ handlers:
   static_dir: js
 
 - url: .*
-  script: blog.app
+  script: cires.app
 
 libraries:
 - name: webapp2

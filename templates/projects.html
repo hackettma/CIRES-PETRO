@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}		
+		
+<table class = "table table-hover">
+<tr>
+<td> Name </td>
+<td> Author </td>
+<td> Notes </td>
+</tr>
+<tbody>
+{% for p in projects %}
+<tr>
+<td>{{p.proj_name}}</td>
+<td>{{p.author}}</td>
+<td>{{p.notes}}</td>
+</tr>
+{% endfor %}
+</tbody>		
+</table>
+
+{% endblock %}
