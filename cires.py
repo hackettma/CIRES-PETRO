@@ -231,9 +231,12 @@ class ShowProjects(BaseHandler):
 
 
   def get(self):
-    p = Project.all()
-    p.ancestor(self.user)
-    self.render_front(p)
+    p = Project.all().ancestor(self.user)
+    z = p.get()
+    if z:
+      self.render_front(p)
+    else:
+      self.redirect('/projects/create')
     
 class CreateProject(BaseHandler):
   def render_front(self):
@@ -251,20 +254,34 @@ class CreateProject(BaseHandler):
 
     p = Project(parent=self.user, proj_name=proj_name, author=author, notes=notes)
     p.put()
-    self.redirect('/')
+    self.redirect('/projects')
 
+class Record(db.Model):
+    UWI = db.StringProperty(required = True)
+    Lease_name = db.StringProperty(required = True)
+    notes = db.TextProperty()
+
+    @classmethod
+    def by_id(cls, pid, uid):
+        return Project.get_by_id(pid, parent = uid)
+
+    @classmethod
+    def by_name(cls, name):
+        p = Project.all().filter('name =', name).get()
+        return p
 
 #######################################################################################
-###########URL HANDLER#################################################################            
+###########URL HANDLER#################################################################  
+PAGE_RE = '(/(?:[a-zA-Z0-9_-]+/?)*)'          
 app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/signup', Signup),
                                 ('/login', Login),
                                 ('/logout', Logout),
                                 ('/projects', ShowProjects),
-                                ('/projects/create', CreateProject)
+                                ('/projects/create', CreateProject),
                                 #('/projects/import', ImportProject),
-                                #('/projects/records', ShowProjectRecords),
-                                #('/projects/records/edit', ShowProjectRecords),
+                                ('/projects/'+ PAGE_RE, ShowProjectRecords),
+                                ('/projects/records/edit', EditProjectRecords)
                                 ],
                               debug=True)
 

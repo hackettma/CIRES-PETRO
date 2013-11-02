@@ -4,13 +4,15 @@
 		
 <table class = "table table-hover">
 <tr>
-<td> Name </td>
-<td> Author </td>
-<td> Notes </td>
+<th></th>
+<th> Name </th>
+<th> Author </th>
+<th> Notes </th>
 </tr>
 <tbody>
 {% for p in projects %}
 <tr>
+<td>{{p.id}}</td>
 <td>{{p.proj_name}}</td>
 <td>{{p.author}}</td>
 <td>{{p.notes}}</td>
