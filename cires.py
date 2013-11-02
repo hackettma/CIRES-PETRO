@@ -258,8 +258,11 @@ class CreateProject(BaseHandler):
 
 class Record(db.Model):
     UWI = db.StringProperty(required = True)
-    Lease_name = db.StringProperty(required = True)
-    notes = db.TextProperty()
+    Lease_name = db.StringProperty()
+    country = db.StringProperty()
+    state = db.StringProperty()
+    county = db.StringProperty()
+    
 
     @classmethod
     def by_id(cls, pid, uid):
