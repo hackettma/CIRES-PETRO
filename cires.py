@@ -266,12 +266,51 @@ class Record(db.Model):
 
     @classmethod
     def by_id(cls, pid, uid):
-        return Project.get_by_id(pid, parent = uid)
+        return Record.get_by_id(pid, parent = uid)
 
     @classmethod
     def by_name(cls, name):
-        p = Project.all().filter('name =', name).get()
+        r = Record.all().filter('name =', name).get()
         return p
+
+class CreateRecord(BaseHandler):
+  def render_front(self):
+    self.render("create_record.html")
+
+
+  def get(self):
+    self.render_front()
+
+  def post(self):
+    path = self.request.path.split('/')
+
+    UWI = self.request.get("UWI")
+    Lease_name = self.request.get("Lease_name")
+    country = self.request.get("country")
+    state = self.request.get("state")
+    county = self.request.get("county")
+    
+
+    r = Project(parent=self.user, proj_name=proj_name, author=author, notes=notes)
+    p.put()
+    self.redirect('/projects')
+
+class ShowRecords(BaseHandler):
+  def render_front(self, records=""):
+    self.render("records.html", records=records)
+
+
+  def get(self, project):
+    if self.user:
+      p = Project.by_name(project)
+      r = Record.all().ancestor(p)
+      z = r.get()
+      if z:
+        self.render_front(r)
+      else:
+        self.redirect('/projects/records/edit')
+    else:
+      self.redirect('/login')    
 
 #######################################################################################
 ###########URL HANDLER#################################################################  
@@ -283,8 +322,8 @@ app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/projects', ShowProjects),
                                 ('/projects/create', CreateProject),
                                 #('/projects/import', ImportProject),
-                                ('/projects/'+ PAGE_RE, ShowProjectRecords),
-                                ('/projects/records/edit', EditProjectRecords)
+                                ('/projects/' + PAGE_RE, ShowProjectRecords),
+                                ('/projects/' + PAGE_RE + '/records/edit', CreateRecord)
                                 ],
                               debug=True)
 
