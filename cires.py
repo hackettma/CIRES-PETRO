@@ -271,7 +271,7 @@ class Record(db.Model):
     @classmethod
     def by_name(cls, name):
         r = Record.all().filter('name =', name).get()
-        return p
+        return r
 
 class CreateRecord(BaseHandler):
   def render_front(self):
@@ -323,7 +323,8 @@ app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/projects/create', CreateProject),
                                 #('/projects/import', ImportProject),
                                 ('/projects/' + PAGE_RE, ShowProjectRecords),
-                                ('/projects/' + PAGE_RE + '/records/edit', CreateRecord)
+                                ('/projects/' + PAGE_RE + '/records/create', CreateRecord),
+                                ('/projects/' + PAGE_RE + '/records/edit' + PAGE_RE, EditRecord)
                                 ],
                               debug=True)
 
