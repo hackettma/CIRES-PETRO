@@ -278,11 +278,13 @@ class CreateRecord(BaseHandler):
     self.render("create_record.html")
 
 
-  def get(self):
+  def get(self, project):
     self.render_front()
 
   def post(self):
     path = self.request.path.split('/')
+    proj_name = path[3]
+    project = Project.by_name(proj_name)
 
     UWI = self.request.get("UWI")
     Lease_name = self.request.get("Lease_name")
@@ -291,9 +293,9 @@ class CreateRecord(BaseHandler):
     county = self.request.get("county")
     
 
-    r = Project(parent=self.user, proj_name=proj_name, author=author, notes=notes)
-    p.put()
-    self.redirect('/projects')
+    r = Record(parent=project, UWI=UWI, Lease_name=Lease_name, country=country, state=state, notes=notes)
+    r.put()
+    self.redirect('/projects/'+proj_name)
 
 class ShowRecords(BaseHandler):
   def render_front(self, records=""):
@@ -321,10 +323,11 @@ app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/logout', Logout),
                                 ('/projects', ShowProjects),
                                 ('/projects/create', CreateProject),
+                                ('/projects' + PAGE_RE + '/records/create', CreateRecord),
                                 #('/projects/import', ImportProject),
-                                ('/projects/' + PAGE_RE, ShowProjectRecords),
-                                ('/projects/' + PAGE_RE + '/records/create', CreateRecord),
-                                ('/projects/' + PAGE_RE + '/records/edit' + PAGE_RE, EditRecord)
+                                ('/projects/' + PAGE_RE, ShowRecords)
+                                
+                                #('/projects/' + PAGE_RE + '/records/edit' + PAGE_RE, EditRecord)
                                 ],
                               debug=True)
 
