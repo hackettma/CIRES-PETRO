@@ -1,0 +1,14 @@
+Current status: Login / logout functional
+1) Change redirect after login to projects page
+2) Projects page html needs welcome header / user name / gravatar
+3) Projects page html needs if statement to allow for text to show only if
+  there are no projects with a link to create a new project
+4) Projects page html needs additional links on table to allow to edit the
+  project properties -- per project
+5) Projects page html needs additional links to allow for deleting projects --
+  per project
+6) Refactor code base to separate models and controllers
+7) Add bcrypt module change password hash generation to bcrypt
+8) Create a project landing page that shows records if there are records in
+  a project or a landing page with a link to create a new record
+9) Add links to edit individual records or delete records

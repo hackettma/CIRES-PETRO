@@ -63,7 +63,7 @@ class BaseHandler(webapp2.RequestHandler):
     return render_str(template, **params)
 
   def render(self, template, **kw):
-    self.write(self.render_str(template, **kw))  
+    self.write(self.render_str(template, **kw))
 
   def set_secure_cookie(self, name, val):
         cookie_val = make_secure_val(val)
@@ -163,7 +163,7 @@ class Signup(BaseHandler):
               self.redirect("/")
             else:
               out_params['err_eml'] = error_email_txt
-              self.render('user_form.html', **out_params)    
+              self.render('user_form.html', **out_params)
           else:
             out_params['err_cnfrm'] = error_cnfrm_txt
             self.render('user_form.html', **out_params)
@@ -234,10 +234,11 @@ class ShowProjects(BaseHandler):
     p = Project.all().ancestor(self.user)
     z = p.get()
     if z:
-      self.render_front(p)
+        self.render_front(p)
     else:
-      self.redirect('/projects/create')
-    
+        self.render_front()
+
+
 class CreateProject(BaseHandler):
   def render_front(self):
     self.render("create_project.html")
@@ -250,7 +251,7 @@ class CreateProject(BaseHandler):
     proj_name = self.request.get("proj_name")
     author = self.request.get("Author")
     notes = self.request.get("Notes")
-    
+
 
     p = Project(parent=self.user, proj_name=proj_name, author=author, notes=notes)
     p.put()
@@ -262,7 +263,7 @@ class Record(db.Model):
     country = db.StringProperty()
     state = db.StringProperty()
     county = db.StringProperty()
-    
+
 
     @classmethod
     def by_id(cls, pid, uid):
@@ -291,7 +292,7 @@ class CreateRecord(BaseHandler):
     country = self.request.get("country")
     state = self.request.get("state")
     county = self.request.get("county")
-    
+
 
     r = Record(parent=project, UWI=UWI, Lease_name=Lease_name, country=country, state=state, notes=notes)
     r.put()
@@ -312,11 +313,11 @@ class ShowRecords(BaseHandler):
       else:
         self.redirect('/projects/records/edit')
     else:
-      self.redirect('/login')    
+      self.redirect('/login')
 
 #######################################################################################
-###########URL HANDLER#################################################################  
-PAGE_RE = '(/(?:[a-zA-Z0-9_-]+/?)*)'          
+###########URL HANDLER#################################################################
+PAGE_RE = '(/(?:[a-zA-Z0-9_-]+/?)*)'
 app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/signup', Signup),
                                 ('/login', Login),
@@ -326,14 +327,7 @@ app = webapp2.WSGIApplication([ ('/', MainPage),
                                 ('/projects' + PAGE_RE + '/records/create', CreateRecord),
                                 #('/projects/import', ImportProject),
                                 ('/projects/' + PAGE_RE, ShowRecords)
-                                
+
                                 #('/projects/' + PAGE_RE + '/records/edit' + PAGE_RE, EditRecord)
                                 ],
                               debug=True)
-
-
-
-
-
-
-

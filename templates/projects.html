@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 
-{% block content %}		
-		
+{% block content %}
+<h3> Welcome {{user.name}} </h3>
+{% if projects %}
 <table class = "table table-hover">
 <tr>
-<th></th>
 <th> Name </th>
 <th> Author </th>
 <th> Notes </th>
+<th> Actions </th>
 </tr>
 <tbody>
 {% for p in projects %}
 <tr>
-<td>{{p.id}}</td>
-<td>{{p.proj_name}}</td>
+<td><a href="/projects/{{p.proj_name}}/records">{{p.proj_name}}</a></td>
 <td>{{p.author}}</td>
 <td>{{p.notes}}</td>
+<td> <a href="/projects/{{p.proj_name}}/edit">Edit Properties</a> | <a href="/projects/{{p.proj_name}}/delete">Delete</a>
 </tr>
 {% endfor %}
-</tbody>		
+</tbody>
 </table>
-
+{% else %}
+<div><p> You have no projects yet.  Click <a href="/projects/create"> here </a> to create one!</p><div>
+{% endif %}
 {% endblock %}
